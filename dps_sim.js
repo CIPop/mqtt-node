@@ -1,5 +1,6 @@
-const mqtt = require('mqtt')
-const client  = mqtt.connect('mqtt://localhost')
+import * as mqtt from "mqtt"
+
+let client  = mqtt.connect('mqtt://localhost')
 
 client.on('connect', function () {
   client.subscribe('presence', function (err) {
