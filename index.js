@@ -10,15 +10,19 @@ function onMessage(topic, message, packet)
   console.log("RECV: t='%s' m='%s'", topic, message.toString())
   
   let jsonMessage = {};
-  try {
-    jsonMessage = JSON.parse(message.toString());
-  } catch (e) {
-    console.log("WARN: JSON parse error: %s", e);
+  if (message.length > 0) {
+    try {
+      jsonMessage = JSON.parse(message.toString());
+    } catch (e) {
+      console.log("WARN: JSON parse error: %s", e);
+    }
   }
-
+  
   let processed = false;
   try {
-    processed = dpsv1.onRegister(topic, jsonMessage, client); //|| 
+    processed = 
+      dpsv1.onRegister(topic, jsonMessage, client) || 
+      dpsv1.onQuery(topic, jsonMessage, client);
   } catch (e) {
     console.log("ERROR processing: %s", e);
   }
