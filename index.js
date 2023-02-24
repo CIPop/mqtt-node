@@ -2,23 +2,30 @@
 // API used: https://github.com/mqttjs/MQTT.js#api
 
 import * as mqtt from "mqtt"
-
-const DPS_TOPIC_HEADER = "$dps/";
-
-function onRegister(topic, jsonMessage)
-{
-  const regex = new RegExp(`^${DPS_TOPIC_HEADER}registrations\/res\/([0-9]*)\/\?\$rid=([0-9]*)$`);
-
-  return false;
-}
+import * as dpsv1 from "./dpsv1.js"
 
 function onMessage(topic, message, packet)
 {
   // message is Buffer
   console.log("RECV: t='%s' m='%s'", topic, message.toString())
-  jsonMessage = JSON.parse(message.toString());
+  
+  let jsonMessage = {};
+  try {
+    jsonMessage = JSON.parse(message.toString());
+  } catch (e) {
+    console.log("WARN: JSON parse error: %s", e);
+  }
 
-  processed = onRegister(topic, jsonMessage); //|| 
+  let processed = false;
+  try {
+    processed = dpsv1.onRegister(topic, jsonMessage, client); //|| 
+  } catch (e) {
+    console.log("ERROR processing: %s", e);
+  }
+
+  if(!processed) {
+    console.log("WARN: Unprocessed message: t='%s' m='%s'", topic, message.toString());
+  }
 }
 
 function onSubscribe(err, granted){
@@ -31,7 +38,9 @@ function onSubscribe(err, granted){
 }
 
 function onConnect(err){
-  client.subscribe(DPS_TOPIC_HEADER + '#', onSubscribe);
+  dpsv1.getSubscribeTopics().forEach(topicFilter => {
+    client.subscribe(topicFilter, {qos: 1}, onSubscribe);
+  });
 }
 
 function onExit(code) {
