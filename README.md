@@ -1,6 +1,10 @@
 # mqtt-node
 NodeJS Azure IoT Service Emulator
 
+## Requirements
+NodeJS version >18.
+MQTT Broker. Setup guidance for Docker-based MosquittoMQTT.
+
 ## Setup
 1. Run the MQTT Broker 
 Follow guidance in [mosquitto_broker](./mosquitto_broker).
@@ -10,5 +14,5 @@ Follow guidance in [mosquitto_broker](./mosquitto_broker).
 
 3. Run the application
 
-`node dps_sim.js`
+`node .`
 
