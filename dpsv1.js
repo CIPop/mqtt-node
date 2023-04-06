@@ -37,7 +37,7 @@ function responseStatusAssigned(client, request_id) {
           "x509": {},
           "registrationId": "dev1-ecc",
           "createdDateTimeUtc": "2023-02-23T23:42:29.8828674Z",
-          "assignedHub": "crispop-iothub1.azure-devices.net",
+          "assignedHub": "my-iothub1.azure-devices.net",
           "deviceId": "dev1-ecc",
           "status": "assigned",
           "substatus": "initialAssignment",
